@@ -1,19 +1,47 @@
 #include "Minefield.h"
 #include "SpriteCodex.h"
 
-void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
+void Minefield::Tile::Reveal()
 {
-	SpriteCodex::DrawTileButton(pos, gfx);
+	status = Status::revealed;
 }
 
-void Minefield::Draw(Graphics & gfx) const
+void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
+{
+	switch (status) {
+	case Status::unrevealed:
+		SpriteCodex::DrawTileButton(pos, gfx);
+		break;
+	case Status::revealed:
+		SpriteCodex::DrawTile0(pos, gfx);
+		break;
+	}
+}
+
+void Minefield::LeftClick(const Vei2 & screenPosition)
+{
+	Vei2 relativePosition = screenPosition - fieldPosition;
+	
+	const int tileSize = SpriteCodex::tileSize;
+	RectI boardRect = GetFieldRect();
+
+	if ( !boardRect.ContainsPoint(screenPosition) ) { return; }
+
+	const int cellX = relativePosition.x / tileSize;
+	const int cellY = relativePosition.y / tileSize;
+
+	GetTileAtPosition(Vei2(cellX, cellY)).Reveal();
+}
+
+void Minefield::Draw(Graphics & gfx)
 {
 	Color baseColor = SpriteCodex::baseColor;
 	const int tileSize = SpriteCodex::tileSize;
-	const int fieldWidth = nColumns * tileSize;
-	const int fieldHeight = nRows * tileSize;
-	RectI boardRect(fieldPosition, fieldWidth, fieldHeight);
+
+	RectI boardRect = GetFieldRect();
+
 	gfx.DrawRect(boardRect, baseColor);
+
 	for (Vei2 gridCoordinate(0, 0); gridCoordinate.y < nRows; gridCoordinate.y++) {
 		for (gridCoordinate.x = 0; gridCoordinate.x < nColumns; gridCoordinate.x++){
 			const int xPos = gridCoordinate.x * tileSize + fieldPosition.x;
@@ -23,12 +51,15 @@ void Minefield::Draw(Graphics & gfx) const
 	}
 }
 
-Minefield::Tile Minefield::GetTileAtPosition(int x, int y) const
+Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position)
 {
-	return tiles[y * nColumns + x];
+	return tiles[position.y * nColumns + position.x];
 }
 
-Minefield::Tile Minefield::GetTileAtPosition(const Vei2& position) const
+const RectI& Minefield::GetFieldRect() const
 {
-	return GetTileAtPosition(position.x, position.y);
+	const int tileSize = SpriteCodex::tileSize;
+	const int fieldWidth = nColumns * tileSize;
+	const int fieldHeight = nRows * tileSize;
+	return RectI(fieldPosition, fieldWidth, fieldHeight);;
 }
