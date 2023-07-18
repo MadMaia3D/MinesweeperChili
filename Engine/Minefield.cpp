@@ -33,7 +33,7 @@ void Minefield::LeftClick(const Vei2 & screenPosition)
 	GetTileAtPosition(Vei2(cellX, cellY)).Reveal();
 }
 
-void Minefield::Draw(Graphics & gfx)
+void Minefield::Draw(Graphics & gfx) const
 {
 	Color baseColor = SpriteCodex::baseColor;
 	const int tileSize = SpriteCodex::tileSize;
@@ -51,12 +51,17 @@ void Minefield::Draw(Graphics & gfx)
 	}
 }
 
+const Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) const
+{
+	return tiles[position.y * nColumns + position.x];
+}
+
 Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position)
 {
 	return tiles[position.y * nColumns + position.x];
 }
 
-const RectI& Minefield::GetFieldRect() const
+RectI Minefield::GetFieldRect() const
 {
 	const int tileSize = SpriteCodex::tileSize;
 	const int fieldWidth = nColumns * tileSize;

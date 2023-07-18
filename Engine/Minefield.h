@@ -19,10 +19,11 @@ public:
 	};
 public:
 	void LeftClick(const Vei2& screenPosition);
-	void Draw(Graphics& gfx);
+	void Draw(Graphics& gfx) const;
 private:
+	const Tile& GetTileAtPosition(const Vei2 & position) const;
 	Tile& GetTileAtPosition(const Vei2 & position);
-	const RectI& GetFieldRect() const;
+	RectI GetFieldRect() const;
 private:
 	const Vei2 fieldPosition = Vei2(50, 50);
 	static constexpr int nColumns = 16;
