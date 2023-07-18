@@ -38,8 +38,13 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (wnd.mouse.LeftIsPressed())
+	{
+		minefield.LeftClick(wnd.mouse.GetPosVei2());
+	}
 }
 
 void Game::ComposeFrame()
 {
+	minefield.Draw(gfx);
 }
