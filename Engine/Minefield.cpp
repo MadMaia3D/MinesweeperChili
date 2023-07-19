@@ -5,7 +5,13 @@
 
 void Minefield::Tile::Reveal()
 {
-	status = Status::revealed;
+	assert(status != Status::Revealed);
+	status = Status::Revealed;
+}
+
+bool Minefield::Tile::IsRevealed() const
+{
+	return status == Status::Revealed;
 }
 
 bool Minefield::Tile::HasBomb() const
@@ -17,10 +23,13 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
 {
 	
 	switch (status) {
-	case Status::unrevealed:
+	case Status::Hidden:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		break;
-	case Status::revealed:
+	case Status::Flagged:
+		SpriteCodex::DrawTileFlag(pos, gfx);
+		break;
+	case Status::Revealed:
 		if (hasBomb) {
 			SpriteCodex::DrawTileBomb(pos, gfx);
 		}else{
@@ -32,37 +41,33 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
 
 void Minefield::Tile::SpawnMine()
 {
+	assert(hasBomb == false);
 	hasBomb = true;
 }
 
-Minefield::Minefield()
+Minefield::Minefield(int nMemes)
 {
-	SpawnMines(30);
+	SpawnMines(nMemes);
 }
 
-void Minefield::LeftClick(const Vei2 & screenPosition)
+void Minefield::LeftClick(const Vei2 & mousePosition)
 {
-	Vei2 relativePosition = screenPosition - fieldPosition;
-	
-	const int tileSize = SpriteCodex::tileSize;
-	RectI boardRect = GetFieldRect();
+	if (!IsScreenPositionInsideGrid(mousePosition)) { return; }
+	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
 
-	if ( !boardRect.ContainsPoint(screenPosition) ) { return; }
-
-	const int cellX = relativePosition.x / tileSize;
-	const int cellY = relativePosition.y / tileSize;
-
-	GetTileAtPosition(Vei2(cellX, cellY)).Reveal();
+	Tile tile = GetTileAtPosition(gridPosition);
+	if (!tile.IsRevealed()){
+		GetTileAtPosition(gridPosition).Reveal();
+	}
 }
 
 void Minefield::Draw(Graphics & gfx) const
 {
 	Color baseColor = SpriteCodex::baseColor;
-	const int tileSize = SpriteCodex::tileSize;
-
 	RectI boardRect = GetFieldRect();
-
 	gfx.DrawRect(boardRect, baseColor);
+
+	const int tileSize = SpriteCodex::tileSize;
 
 	for (Vei2 gridCoordinate(0, 0); gridCoordinate.y < nRows; gridCoordinate.y++) {
 		for (gridCoordinate.x = 0; gridCoordinate.x < nColumns; gridCoordinate.x++){
@@ -73,32 +78,57 @@ void Minefield::Draw(Graphics & gfx) const
 	}
 }
 
-void Minefield::SpawnMines(int quantity)
+void Minefield::SpawnMines(int nMines)
 {
 	const int tilesQuantity = nColumns * nRows;
-	assert(quantity < tilesQuantity);
+	assert(nMines > 0 && nMines < tilesQuantity);
 
-	std::random_device randomDevice;
-	std::mt19937 randomNumberGenerator( randomDevice() );
-	std::uniform_int_distribution<int> dist(0, tilesQuantity);
+	std::random_device rd;
+	std::mt19937 rng(rd() );
+	std::uniform_int_distribution<int> xDist(0, nColumns);
+	std::uniform_int_distribution<int> yDist(0, nRows);
 
-	for (int i = 0; i < quantity; i++)
+	for (int i = 0; i < nMines; i++)
 	{
-		int randomTileIndex;
+		Vei2 spawnPos;
 		do {
-			randomTileIndex = dist(randomNumberGenerator);
-		} while (tiles[randomTileIndex].HasBomb());
-		tiles[randomTileIndex].SpawnMine();
+			int x = xDist(rng);
+			int y = yDist(rng);
+			spawnPos = {x, y};
+		} while (GetTileAtPosition(spawnPos).HasBomb());
+		GetTileAtPosition(spawnPos).SpawnMine();
 	}	
+}
+
+bool Minefield::IsScreenPositionInsideGrid(const Vei2 & screenPosition) const
+{
+	RectI boardRect = GetFieldRect();
+	return boardRect.ContainsPoint(screenPosition);
+}
+
+Vei2 Minefield::ScreenSpaceToGridSpace(const Vei2 & screenPosition) const
+{
+	Vei2 relativePosition = screenPosition - fieldPosition;
+
+	const int tileSize = SpriteCodex::tileSize;
+
+	const int cellX = relativePosition.x / tileSize;
+	const int cellY = relativePosition.y / tileSize;
+
+	const Vei2 gridSpacePosition = Vei2(cellX, cellY);
+
+	return gridSpacePosition;
 }
 
 const Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) const
 {
+	assert(position.x <= nColumns && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
 Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position)
 {
+	assert(position.x <= nColumns && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
