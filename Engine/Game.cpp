@@ -39,10 +39,18 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	if (wnd.mouse.LeftIsPressed())	{
+	if (canMouseClick && wnd.mouse.LeftIsPressed()) {
 		minefield.OnRevealClick(wnd.mouse.GetPosVei2());
-	} else if (wnd.mouse.RightIsPressed())	{
+	}
+	else if (canMouseClick && wnd.mouse.RightIsPressed()) {
 		minefield.OnFlagClick(wnd.mouse.GetPosVei2());
+	}
+
+	if (canMouseClick && (wnd.mouse.LeftIsPressed() || wnd.mouse.RightIsPressed())) {
+		canMouseClick = false;
+	}
+	else if (!canMouseClick && !wnd.mouse.LeftIsPressed() && !wnd.mouse.RightIsPressed()) {
+		canMouseClick = true;
 	}
 }
 
