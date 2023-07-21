@@ -50,14 +50,14 @@ Minefield::Minefield(int nMemes)
 	SpawnMines(nMemes);
 }
 
-void Minefield::LeftClick(const Vei2 & mousePosition)
+void Minefield::OnRevealClick(const Vei2 & mousePosition)
 {
 	if (!IsScreenPositionInsideGrid(mousePosition)) { return; }
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
 
-	Tile tile = GetTileAtPosition(gridPosition);
+	Tile& tile = GetTileAtPosition(gridPosition);
 	if (!tile.IsRevealed()){
-		GetTileAtPosition(gridPosition).Reveal();
+		tile.Reveal();
 	}
 }
 

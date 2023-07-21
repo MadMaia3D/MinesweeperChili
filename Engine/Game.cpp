@@ -41,7 +41,7 @@ void Game::UpdateModel()
 {
 	if (wnd.mouse.LeftIsPressed())
 	{
-		minefield.LeftClick(wnd.mouse.GetPosVei2());
+		minefield.OnRevealClick(wnd.mouse.GetPosVei2());
 	}
 }
 

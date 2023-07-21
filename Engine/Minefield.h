@@ -22,7 +22,7 @@ public:
 	};
 public:
 	Minefield(int nMemes);
-	void LeftClick(const Vei2& screenPosition);
+	void OnRevealClick(const Vei2& mousePosition);
 	void Draw(Graphics& gfx) const;
 private:
 	void SpawnMines(int nMines);
