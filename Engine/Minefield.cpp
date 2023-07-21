@@ -14,6 +14,22 @@ bool Minefield::Tile::IsRevealed() const
 	return status == Status::Revealed;
 }
 
+bool Minefield::Tile::IsFlagged() const
+{
+	return status == Status::Flagged;
+}
+
+void Minefield::Tile::SetFlag(bool value)
+{
+	assert(status != Status::Revealed);
+	if(status == Status::Flagged) {
+		status = Status::Hidden;
+	}
+	else {
+		status = Status::Flagged;
+	}
+}
+
 bool Minefield::Tile::HasBomb() const
 {
 	return hasBomb;
@@ -27,6 +43,7 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
 		SpriteCodex::DrawTileButton(pos, gfx);
 		break;
 	case Status::Flagged:
+		SpriteCodex::DrawTileButton(pos, gfx);
 		SpriteCodex::DrawTileFlag(pos, gfx);
 		break;
 	case Status::Revealed:
@@ -56,9 +73,20 @@ void Minefield::OnRevealClick(const Vei2 & mousePosition)
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
 
 	Tile& tile = GetTileAtPosition(gridPosition);
-	if (!tile.IsRevealed()){
+	if (!tile.IsRevealed() && !tile.IsFlagged()){
 		tile.Reveal();
 	}
+}
+
+void Minefield::OnFlagClick(const Vei2 & mousePosition)
+{
+	if (!IsScreenPositionInsideGrid(mousePosition)) { return; }
+	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
+
+	Tile& tile = GetTileAtPosition(gridPosition);
+	if (tile.IsRevealed()) { return; }
+	tile.SetFlag(!tile.IsFlagged());
+
 }
 
 void Minefield::Draw(Graphics & gfx) const

@@ -12,7 +12,9 @@ public:
 		};
 	public:
 		void Reveal();
-		bool IsRevealed()const ;
+		bool IsRevealed() const;
+		bool IsFlagged() const;
+		void SetFlag(bool value);
 		void SpawnMine();
 		bool HasBomb() const;
 		void Draw(const Vei2& pos, Graphics& gfx) const;
@@ -23,6 +25,7 @@ public:
 public:
 	Minefield(int nMemes);
 	void OnRevealClick(const Vei2& mousePosition);
+	void OnFlagClick(const Vei2& mousePosition);
 	void Draw(Graphics& gfx) const;
 private:
 	void SpawnMines(int nMines);
