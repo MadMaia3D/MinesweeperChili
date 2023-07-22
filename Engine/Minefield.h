@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.h"
+#include "SpriteCodex.h"
 
 class Minefield {
 public:
@@ -47,9 +48,11 @@ private:
 	Tile& GetTileAtPosition(const Vei2 & position);
 	RectI GetFieldRect() const;
 private:
-	const Vei2 fieldPosition = Vei2(50, 50);
 	static constexpr int nColumns = 16;
 	static constexpr int nRows = 12;
+	static constexpr int fieldPositionX = (Graphics::ScreenWidth) / 2 - (SpriteCodex::tileSize * nColumns) / 2;
+	static constexpr int fieldPositionY = (Graphics::ScreenHeight) / 2 - (SpriteCodex::tileSize * nRows) / 2;
+	const Vei2 fieldPosition = Vei2(fieldPositionX, fieldPositionY);
 	Tile tiles[nColumns * nRows];
 	bool isGameOver = false;
 };

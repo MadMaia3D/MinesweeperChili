@@ -1,5 +1,4 @@
 #include "Minefield.h"
-#include "SpriteCodex.h"
 #include <random>
 #include <algorithm>
 #include <assert.h>
@@ -95,9 +94,11 @@ bool Minefield::Tile::HasNeighborMines() const {
 }
 
 Minefield::Minefield(int nMemes) {
+	const int a = 1;
 	SpawnMines(nMemes);
+	isGameOver = false;
 	for (int x = 0; x < nColumns; x++) {
-		for (int y = 0; y < nRows; y++) {
+		for (int y = 0; y < nRows; y++) {			
 			Vei2 gridPosition(x, y);
 			int nMines = CountNeighborMines(gridPosition);
 			Tile& tile = GetTileAtPosition(gridPosition);
