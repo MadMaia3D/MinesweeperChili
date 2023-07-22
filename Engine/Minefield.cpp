@@ -32,6 +32,7 @@ bool Minefield::Tile::HasBomb() const {
 }
 
 void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const {
+	assert(nNeighborMines >= 0 && nNeighborMines < 9);
 	switch (status) {
 	case Status::Hidden:
 		SpriteCodex::DrawTileButton(pos, gfx);
@@ -167,12 +168,14 @@ Vei2 Minefield::ScreenSpaceToGridSpace(const Vei2 & screenPosition) const {
 }
 
 const Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) const {
-	assert(position.x <= nColumns && position.y <= nRows);
+	assert(position.x > 0 && position.x <= nColumns);
+	assert(position.y > 0 && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
 Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) {
-	assert(position.x <= nColumns && position.y <= nRows);
+	assert(position.x > 0 && position.x <= nColumns);
+	assert(position.y > 0 && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
