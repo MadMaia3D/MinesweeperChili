@@ -1,6 +1,7 @@
 #include "Minefield.h"
 #include "SpriteCodex.h"
 #include <random>
+#include <algorithm>
 #include <assert.h>
 
 void Minefield::Tile::Reveal()
@@ -49,11 +50,41 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
 	case Status::Revealed:
 		if (hasBomb) {
 			SpriteCodex::DrawTileBomb(pos, gfx);
-		}else{
-			SpriteCodex::DrawTile0(pos, gfx);
+			return;
 		}
 		break;
-	}	
+	}
+	switch (nNeighborMines) {
+	case 0:
+		SpriteCodex::DrawTile0(pos, gfx);
+		break;
+	case 1:
+		SpriteCodex::DrawTile1(pos, gfx);
+		break;
+	case 2:
+		SpriteCodex::DrawTile2(pos, gfx);
+		break;
+	case 3:
+		SpriteCodex::DrawTile3(pos, gfx);
+		break;
+	case 4:
+		SpriteCodex::DrawTile4(pos, gfx);
+		break;
+	case 5:
+		SpriteCodex::DrawTile5(pos, gfx);
+		break;
+	case 6:
+		SpriteCodex::DrawTile6(pos, gfx);
+		break;
+	case 7:
+		SpriteCodex::DrawTile7(pos, gfx);
+		break;
+	case 8:
+		SpriteCodex::DrawTile8(pos, gfx);
+		break;
+	default:
+		SpriteCodex::DrawTileBombRed(pos, gfx);
+	}
 }
 
 void Minefield::Tile::SpawnMine()
@@ -62,9 +93,24 @@ void Minefield::Tile::SpawnMine()
 	hasBomb = true;
 }
 
+void Minefield::Tile::SetNeighborMinesNumber(int nMines)
+{
+	assert(nMines > -1 && nMines < 9);
+	nNeighborMines = nMines;
+}
+
 Minefield::Minefield(int nMemes)
 {
 	SpawnMines(nMemes);
+	for (int x = 0; x < nColumns; x++) {
+		for (int y = 0; y < nRows; y++) {
+			Vei2 gridPosition(x, y);
+			int nMines = CountNeighborMines(gridPosition);
+			Tile& tile = GetTileAtPosition(gridPosition);
+			tile.SetNeighborMinesNumber(nMines);
+			tile.Reveal();
+		}
+	}
 }
 
 void Minefield::OnRevealClick(const Vei2 & mousePosition)
@@ -126,6 +172,26 @@ void Minefield::SpawnMines(int nMines)
 		} while (GetTileAtPosition(spawnPos).HasBomb());
 		GetTileAtPosition(spawnPos).SpawnMine();
 	}	
+}
+
+int Minefield::CountNeighborMines(const Vei2 & gridPosition) const
+{
+	int startX = std::max(0, gridPosition.x - 1);
+	int endX = std::min(gridPosition.x + 1, nColumns - 1);
+	int startY = std::max(0, gridPosition.y - 1);
+	int endY = std::min(gridPosition.y + 1, nRows - 1);
+	int minesCount = 0;
+	for (int x = startX; x <= endX; x++) {
+		for (int y = startY; y <= endY; y++) {
+			const Vei2 currentPosition(x, y);
+			if (currentPosition == gridPosition) { continue; }
+			bool currentPositionHasBomb = GetTileAtPosition(currentPosition).HasBomb();
+			if (currentPositionHasBomb) {
+				minesCount++;
+			}			
+		}
+	}
+	return minesCount;
 }
 
 bool Minefield::IsScreenPositionInsideGrid(const Vei2 & screenPosition) const

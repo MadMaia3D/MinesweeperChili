@@ -14,13 +14,15 @@ public:
 		void Reveal();
 		bool IsRevealed() const;
 		bool IsFlagged() const;
+		bool HasBomb() const;
 		void SetFlag(bool value);
 		void SpawnMine();
-		bool HasBomb() const;
+		void SetNeighborMinesNumber(int nMines);
 		void Draw(const Vei2& pos, Graphics& gfx) const;
 	private:
 		bool hasBomb = false;
 		Status status = Status::Hidden;
+		int nNeighborMines = -1;
 	};
 public:
 	Minefield(int nMemes);
@@ -29,6 +31,7 @@ public:
 	void Draw(Graphics& gfx) const;
 private:
 	void SpawnMines(int nMines);
+	int CountNeighborMines(const Vei2& gridPosition) const;
 	bool IsScreenPositionInsideGrid(const Vei2 & screenPosition) const;
 	Vei2 ScreenSpaceToGridSpace(const Vei2& screenPosition) const;
 	const Tile& GetTileAtPosition(const Vei2 & position) const;
