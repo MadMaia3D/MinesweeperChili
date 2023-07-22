@@ -94,7 +94,6 @@ bool Minefield::Tile::HasNeighborMines() const {
 }
 
 Minefield::Minefield(int nMemes) {
-	const int a = 1;
 	SpawnMines(nMemes);
 	isGameOver = false;
 	for (int x = 0; x < nColumns; x++) {
