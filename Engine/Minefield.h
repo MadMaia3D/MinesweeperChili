@@ -10,6 +10,11 @@ public:
 		int bottom;
 		int right;
 	};
+	enum class GameState : unsigned char {
+		NotStarted,
+		Playing,
+		GameOver
+	};
 	class Tile {
 	public:
 		enum class Status : unsigned char{
@@ -54,5 +59,5 @@ private:
 	static constexpr int fieldPositionY = (Graphics::ScreenHeight) / 2 - (SpriteCodex::tileSize * nRows) / 2;
 	const Vei2 fieldPosition = Vei2(fieldPositionX, fieldPositionY);
 	Tile tiles[nColumns * nRows];
-	bool isGameOver = false;
+	GameState gameState = GameState::NotStarted;
 };

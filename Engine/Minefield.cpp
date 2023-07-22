@@ -95,7 +95,6 @@ bool Minefield::Tile::HasNeighborMines() const {
 
 Minefield::Minefield(int nMemes) {
 	SpawnMines(nMemes);
-	isGameOver = false;
 	for (int x = 0; x < nColumns; x++) {
 		for (int y = 0; y < nRows; y++) {			
 			Vei2 gridPosition(x, y);
@@ -107,7 +106,7 @@ Minefield::Minefield(int nMemes) {
 }
 
 void Minefield::OnRevealClick(const Vei2 & mousePosition) {
-	if ( isGameOver || !IsScreenPositionInsideGrid(mousePosition)) {
+	if ( gameState == GameState::GameOver || !IsScreenPositionInsideGrid(mousePosition)) {
 		return; 
 	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
@@ -117,12 +116,12 @@ void Minefield::OnRevealClick(const Vei2 & mousePosition) {
 	}
 	tile.Reveal();
 	if (tile.HasBomb()) {
-		isGameOver = true;
+		gameState = GameState::GameOver;
 	}
 }
 
 void Minefield::OnFlagClick(const Vei2 & mousePosition) {
-	if (isGameOver || !IsScreenPositionInsideGrid(mousePosition)) {
+	if (gameState == GameState::GameOver || !IsScreenPositionInsideGrid(mousePosition)) {
 		return;
 	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
@@ -144,7 +143,7 @@ void Minefield::Draw(Graphics & gfx) const {
 		for (gridCoordinate.x = 0; gridCoordinate.x < nColumns; gridCoordinate.x++) {
 			const int xPos = gridCoordinate.x * tileSize + fieldPosition.x;
 			const int yPos = gridCoordinate.y * tileSize + fieldPosition.y;
-			if (!isGameOver) {
+			if (gameState != GameState::GameOver) {
 				GetTileAtPosition(gridCoordinate).Draw(Vei2(xPos, yPos), gfx);
 			} else {
 				GetTileAtPosition(gridCoordinate).DrawOnGameOver(Vei2(xPos, yPos), gfx);
