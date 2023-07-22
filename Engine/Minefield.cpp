@@ -110,7 +110,6 @@ Minefield::Minefield(int nMemes)
 			int nMines = CountNeighborMines(gridPosition);
 			Tile& tile = GetTileAtPosition(gridPosition);
 			tile.SetNeighborMinesNumber(nMines);
-			tile.Reveal();
 		}
 	}
 }
