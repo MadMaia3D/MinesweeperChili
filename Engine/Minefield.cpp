@@ -42,10 +42,12 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const
 	switch (status) {
 	case Status::Hidden:
 		SpriteCodex::DrawTileButton(pos, gfx);
+		return;
 		break;
 	case Status::Flagged:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		SpriteCodex::DrawTileFlag(pos, gfx);
+		return;
 		break;
 	case Status::Revealed:
 		if (hasBomb) {
