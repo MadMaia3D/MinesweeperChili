@@ -26,6 +26,7 @@ public:
 		void SetNeighborMinesNumber(int nMines);
 		bool HasNeighborMines() const;
 		void Draw(const Vei2& pos, Graphics& gfx) const;
+		void DrawOnGameOver(const Vei2& pos, Graphics& gfx) const;
 	private:
 		bool hasBomb = false;
 		Status status = Status::Hidden;
@@ -50,4 +51,5 @@ private:
 	static constexpr int nColumns = 16;
 	static constexpr int nRows = 12;
 	Tile tiles[nColumns * nRows];
+	bool isGameOver = false;
 };

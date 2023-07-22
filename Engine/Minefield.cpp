@@ -52,6 +52,34 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const {
 	}
 }
 
+void Minefield::Tile::DrawOnGameOver(const Vei2 & pos, Graphics & gfx) const {
+	assert(nNeighborMines >= 0 && nNeighborMines < 9);
+	switch (status) {
+	case Status::Hidden:
+		SpriteCodex::DrawTileButton(pos, gfx);
+		if (hasBomb) {
+			SpriteCodex::DrawTileBomb(pos, gfx);
+		}
+		break;
+	case Status::Flagged:
+		SpriteCodex::DrawTileButton(pos, gfx);
+		if (hasBomb) {
+			SpriteCodex::DrawTileFlag(pos, gfx);
+		}else {
+			SpriteCodex::DrawTileCrossRed(pos, gfx);
+		}
+		break;
+	case Status::Revealed:
+		if (!hasBomb) {
+			SpriteCodex::DrawTileNumber(pos, nNeighborMines, gfx);
+		}
+		else {
+			SpriteCodex::DrawTileBombRed(pos, gfx);
+		}
+		break;
+	}
+}
+
 void Minefield::Tile::SpawnMine() {
 	assert(hasBomb == false);
 	hasBomb = true;
@@ -79,17 +107,24 @@ Minefield::Minefield(int nMemes) {
 }
 
 void Minefield::OnRevealClick(const Vei2 & mousePosition) {
-	if (!IsScreenPositionInsideGrid(mousePosition)) { return; }
+	if ( isGameOver || !IsScreenPositionInsideGrid(mousePosition)) {
+		return; 
+	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
-
 	Tile& tile = GetTileAtPosition(gridPosition);
-	if (!tile.IsRevealed() && !tile.IsFlagged()) {
-		tile.Reveal();
+	if (tile.IsRevealed() || tile.IsFlagged()) { 
+		return; 
+	}
+	tile.Reveal();
+	if (tile.HasBomb()) {
+		isGameOver = true;
 	}
 }
 
 void Minefield::OnFlagClick(const Vei2 & mousePosition) {
-	if (!IsScreenPositionInsideGrid(mousePosition)) { return; }
+	if (isGameOver || !IsScreenPositionInsideGrid(mousePosition)) {
+		return;
+	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
 
 	Tile& tile = GetTileAtPosition(gridPosition);
@@ -109,7 +144,11 @@ void Minefield::Draw(Graphics & gfx) const {
 		for (gridCoordinate.x = 0; gridCoordinate.x < nColumns; gridCoordinate.x++) {
 			const int xPos = gridCoordinate.x * tileSize + fieldPosition.x;
 			const int yPos = gridCoordinate.y * tileSize + fieldPosition.y;
-			GetTileAtPosition(gridCoordinate).Draw(Vei2(xPos, yPos), gfx);
+			if (!isGameOver) {
+				GetTileAtPosition(gridCoordinate).Draw(Vei2(xPos, yPos), gfx);
+			} else {
+				GetTileAtPosition(gridCoordinate).DrawOnGameOver(Vei2(xPos, yPos), gfx);
+			}
 		}
 	}
 }
