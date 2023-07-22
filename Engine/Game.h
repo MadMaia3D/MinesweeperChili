@@ -44,6 +44,5 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Minefield minefield;
-	bool canMouseClick = true;
 	/********************************/
 };
