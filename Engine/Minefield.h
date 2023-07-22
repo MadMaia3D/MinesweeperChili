@@ -3,6 +3,12 @@
 
 class Minefield {
 public:
+	struct TileArea {
+		int top;
+		int left;
+		int bottom;
+		int right;
+	};
 	class Tile {
 	public:
 		enum class Status : unsigned char{
@@ -32,6 +38,7 @@ public:
 	void Draw(Graphics& gfx) const;
 private:
 	void SpawnMines(int nMines);
+	const TileArea GetSurroundingArea(const Vei2& gridPosition) const;
 	int CountNeighborMines(const Vei2& gridPosition) const;
 	bool IsScreenPositionInsideGrid(const Vei2 & screenPosition) const;
 	Vei2 ScreenSpaceToGridSpace(const Vei2& screenPosition) const;

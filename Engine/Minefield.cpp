@@ -134,14 +134,20 @@ void Minefield::SpawnMines(int nMines) {
 	}
 }
 
+const Minefield::TileArea Minefield::GetSurroundingArea(const Vei2 & gridPosition) const {
+	TileArea area;
+	area.left = std::max(0, gridPosition.x - 1);
+	area.right = std::min(gridPosition.x + 1, nColumns - 1);
+	area.top = std::max(0, gridPosition.y - 1);
+	area.bottom = std::min(gridPosition.y + 1, nRows - 1);
+	return area;
+}
+
 int Minefield::CountNeighborMines(const Vei2 & gridPosition) const {
-	int startX = std::max(0, gridPosition.x - 1);
-	int endX = std::min(gridPosition.x + 1, nColumns - 1);
-	int startY = std::max(0, gridPosition.y - 1);
-	int endY = std::min(gridPosition.y + 1, nRows - 1);
+	TileArea area = GetSurroundingArea(gridPosition);
 	int minesCount = 0;
-	for (int x = startX; x <= endX; x++) {
-		for (int y = startY; y <= endY; y++) {
+	for (int x = area.left; x <= area.right; x++) {
+		for (int y = area.top; y <= area.bottom; y++) {
 			const Vei2 currentPosition(x, y);
 			if (currentPosition == gridPosition) { continue; }
 			bool currentPositionHasBomb = GetTileAtPosition(currentPosition).HasBomb();
