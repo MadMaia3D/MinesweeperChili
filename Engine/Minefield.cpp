@@ -62,6 +62,10 @@ void Minefield::Tile::SetNeighborMinesNumber(int nMines) {
 	nNeighborMines = nMines;
 }
 
+bool Minefield::Tile::HasNeighborMines() const {
+	return nNeighborMines > 0;
+}
+
 Minefield::Minefield(int nMemes) {
 	SpawnMines(nMemes);
 	for (int x = 0; x < nColumns; x++) {

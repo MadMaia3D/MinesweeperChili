@@ -18,6 +18,7 @@ public:
 		void SetFlag(bool value);
 		void SpawnMine();
 		void SetNeighborMinesNumber(int nMines);
+		bool HasNeighborMines() const;
 		void Draw(const Vei2& pos, Graphics& gfx) const;
 	private:
 		bool hasBomb = false;
