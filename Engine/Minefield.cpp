@@ -172,14 +172,14 @@ Vei2 Minefield::ScreenSpaceToGridSpace(const Vei2 & screenPosition) const {
 }
 
 const Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) const {
-	assert(position.x > 0 && position.x <= nColumns);
-	assert(position.y > 0 && position.y <= nRows);
+	assert(position.x >= 0 && position.x <= nColumns);
+	assert(position.y >= 0 && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
 Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) {
-	assert(position.x > 0 && position.x <= nColumns);
-	assert(position.y > 0 && position.y <= nRows);
+	assert(position.x >= 0 && position.x <= nColumns);
+	assert(position.y >= 0 && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
 }
 
