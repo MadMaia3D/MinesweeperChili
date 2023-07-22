@@ -20,6 +20,7 @@ public:
 	static void DrawTile6( const Vei2& pos,Graphics& gfx );
 	static void DrawTile7( const Vei2& pos,Graphics& gfx );
 	static void DrawTile8( const Vei2& pos,Graphics& gfx );
+	static void DrawTileNumber(const Vei2& pos, int number, Graphics& gfx);
 	static void DrawTileButton( const Vei2& pos,Graphics& gfx );
 	static void DrawTileCrossRed( const Vei2& pos,Graphics& gfx );
 	static void DrawTileGreenCross(const Vei2& pos, Graphics& gfx);
