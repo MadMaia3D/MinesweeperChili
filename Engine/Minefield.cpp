@@ -95,8 +95,12 @@ bool Minefield::Tile::HasNeighborMines() const {
 
 Minefield::Minefield(int nMemes) {
 	SpawnMines(nMemes);
+	SetNeighborMinesNumber();	
+}
+
+void Minefield::SetNeighborMinesNumber(){
 	for (int x = 0; x < nColumns; x++) {
-		for (int y = 0; y < nRows; y++) {			
+		for (int y = 0; y < nRows; y++) {
 			Vei2 gridPosition(x, y);
 			int nMines = CountNeighborMines(gridPosition);
 			Tile& tile = GetTileAtPosition(gridPosition);

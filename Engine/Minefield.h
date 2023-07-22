@@ -45,6 +45,7 @@ public:
 	void Draw(Graphics& gfx) const;
 private:
 	void SpawnMines(int nMines);
+	void SetNeighborMinesNumber();
 	const TileArea GetSurroundingArea(const Vei2& gridPosition) const;
 	int CountNeighborMines(const Vei2& gridPosition) const;
 	bool IsScreenPositionInsideGrid(const Vei2 & screenPosition) const;
