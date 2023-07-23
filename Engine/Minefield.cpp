@@ -146,7 +146,7 @@ void Minefield::OnRevealClick(const Vei2 & mousePosition) {
 	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
 
-	if (gameState == GameState::NotStarted && !(gridPosition == hintPosition)) {
+	if (gameState == GameState::NotStarted && gridPosition != hintPosition) {
 		return;
 	}
 
@@ -184,7 +184,7 @@ void Minefield::Draw(Graphics & gfx) const {
 		}
 	}
 
-	if (gameState == GameState::NotStarted && !(hintPosition == Vei2(-1, -1))) {
+	if (gameState == GameState::NotStarted && hintPosition != Vei2(-1, -1)) {
 		const int xPos = hintPosition.x * tileSize + fieldPosition.x;
 		const int yPos = hintPosition.y * tileSize + fieldPosition.y;
 		SpriteCodex::DrawTileGreenCross(Vei2(xPos, yPos), gfx);
