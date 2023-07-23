@@ -99,7 +99,7 @@ Minefield::Minefield(int nMemes) {
 	hintPosition = GenerateHintPosition();
 }
 
-void Minefield::SetNeighborMinesNumber(){
+void Minefield::SetNeighborMinesNumber() {
 	for (int x = 0; x < nColumns; x++) {
 		for (int y = 0; y < nRows; y++) {
 			Vei2 gridPosition(x, y);
@@ -110,7 +110,7 @@ void Minefield::SetNeighborMinesNumber(){
 	}
 }
 
-Vei2 Minefield::GenerateHintPosition() {
+Vei2 Minefield::GenerateHintPosition() const {
 	std::random_device rd;
 	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> xDist(0, nColumns - 1);
