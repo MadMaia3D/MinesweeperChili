@@ -46,6 +46,7 @@ public:
 private:
 	void SpawnMines(int nMines);
 	void SetNeighborMinesNumber();
+	Vei2 GenerateHintPosition();
 	const TileArea GetSurroundingArea(const Vei2& gridPosition) const;
 	int CountNeighborMines(const Vei2& gridPosition) const;
 	bool IsScreenPositionInsideGrid(const Vei2 & screenPosition) const;
@@ -54,11 +55,12 @@ private:
 	Tile& GetTileAtPosition(const Vei2 & position);
 	RectI GetFieldRect() const;
 private:
+	GameState gameState = GameState::NotStarted;
 	static constexpr int nColumns = 16;
 	static constexpr int nRows = 12;
 	static constexpr int fieldPositionX = (Graphics::ScreenWidth) / 2 - (SpriteCodex::tileSize * nColumns) / 2;
 	static constexpr int fieldPositionY = (Graphics::ScreenHeight) / 2 - (SpriteCodex::tileSize * nRows) / 2;
 	const Vei2 fieldPosition = Vei2(fieldPositionX, fieldPositionY);
 	Tile tiles[nColumns * nRows];
-	GameState gameState = GameState::NotStarted;
+	Vei2 hintPosition = Vei2(-1, -1);
 };
