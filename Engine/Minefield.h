@@ -44,8 +44,10 @@ public:
 	void OnFlagClick(const Vei2& mousePosition);
 	void Draw(Graphics& gfx) const;
 private:
+	void RevealMine(const Vei2& gridPosition);
 	void SpawnMines(int nMines);
 	void SetNeighborMinesNumber();
+	void RevealNeighbors(const Vei2& gridPosition);
 	Vei2 GenerateHintPosition() const;
 	const TileArea GetSurroundingArea(const Vei2& gridPosition) const;
 	int CountNeighborMines(const Vei2& gridPosition) const;

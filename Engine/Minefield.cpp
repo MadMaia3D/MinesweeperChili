@@ -110,6 +110,16 @@ void Minefield::SetNeighborMinesNumber() {
 	}
 }
 
+void Minefield::RevealNeighbors(const Vei2 & gridPosition) {
+	TileArea area = GetSurroundingArea(gridPosition);
+	for (int x = area.left; x <= area.right; x++) {
+		for (int y = area.top; y <= area.bottom; y++) {
+			Vei2 currentPosition(x, y);
+			RevealMine(currentPosition);
+		}
+	}
+}
+
 Vei2 Minefield::GenerateHintPosition() const {
 	std::random_device rd;
 	std::mt19937 rng(rd());
@@ -140,22 +150,11 @@ void Minefield::OnRevealClick(const Vei2 & mousePosition) {
 		return;
 	}
 
-	Tile& tile = GetTileAtPosition(gridPosition);
-	if (tile.IsRevealed() || tile.IsFlagged()) { 
-		return; 
-	}
-	if (gameState == GameState::NotStarted) {
-		gameState = GameState::Playing;
-	}
-
-	tile.Reveal();
-	if (tile.HasBomb()) {
-		gameState = GameState::GameOver;
-	}
+	RevealMine(gridPosition);
 }
 
 void Minefield::OnFlagClick(const Vei2 & mousePosition) {
-	if (gameState == GameState::GameOver || !IsScreenPositionInsideGrid(mousePosition)) {
+	if (gameState != GameState::Playing || !IsScreenPositionInsideGrid(mousePosition)) {
 		return;
 	}
 	const Vei2 gridPosition = ScreenSpaceToGridSpace(mousePosition);
@@ -189,6 +188,24 @@ void Minefield::Draw(Graphics & gfx) const {
 		const int xPos = hintPosition.x * tileSize + fieldPosition.x;
 		const int yPos = hintPosition.y * tileSize + fieldPosition.y;
 		SpriteCodex::DrawTileGreenCross(Vei2(xPos, yPos), gfx);
+	}
+}
+
+void Minefield::RevealMine(const Vei2 & gridPosition) {
+	Tile& tile = GetTileAtPosition(gridPosition);
+	if (tile.IsRevealed() || tile.IsFlagged()) {
+		return;
+	}
+	tile.Reveal();
+
+	if (gameState == GameState::NotStarted) {
+		gameState = GameState::Playing;
+	}
+	if (tile.HasBomb()) {
+		gameState = GameState::GameOver;
+	}
+	else if (!tile.HasNeighborMines()) {
+		RevealNeighbors(gridPosition);
 	}
 }
 
