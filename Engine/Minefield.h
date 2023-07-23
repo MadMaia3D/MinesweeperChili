@@ -30,6 +30,7 @@ public:
 		void SetFlag(bool value);
 		void SpawnMine();
 		void SetNeighborMinesNumber(int nMines);
+		int GetnNeighborMines() const;
 		bool HasNeighborMines() const;
 		void Draw(const Vei2& pos, Graphics& gfx) const;
 		void DrawOnGameOver(const Vei2& pos, Graphics& gfx) const;
@@ -47,6 +48,7 @@ private:
 	void RevealMine(const Vei2& gridPosition);
 	void SpawnMines(int nMines);
 	void SetNeighborMinesNumber();
+	int GetNeighborFlagsCount(const Vei2& gridPosition) const;
 	void RevealNeighbors(const Vei2& gridPosition);
 	Vei2 GenerateHintPosition() const;
 	const TileArea GetSurroundingArea(const Vei2& gridPosition) const;
