@@ -10,6 +10,7 @@ public:
 	static constexpr int tileSize = 24;
 	// base color for all tiles
 	static constexpr Color baseColor = { 192,192,192 };
+	static constexpr Color shadowColor = { 128, 128, 128};
 	// 16x16 tile sprites assume (192,192,192) background and top left origin
 	static void DrawTile0( const Vei2& pos,Graphics& gfx );
 	static void DrawTile1( const Vei2& pos,Graphics& gfx );
@@ -27,4 +28,53 @@ public:
 	static void DrawTileFlag( const Vei2& pos,Graphics& gfx );
 	static void DrawTileBomb( const Vei2& pos,Graphics& gfx );
 	static void DrawTileBombRed( const Vei2& pos,Graphics& gfx );
+	// code for beveled rectangle drawing
+	static void DrawBeveledSquareUp(Vei2 pos, int width, int height, int bevel, Graphics& gfx) {
+		gfx.DrawRect(RectI(pos, width, height), baseColor);
+		DrawBevelTop(pos, width, bevel, Colors::White, gfx);
+		DrawBevelRight(pos + Vei2(width, 0), height, bevel, shadowColor, gfx);
+		DrawBevelBottom(pos + Vei2(0, height), width, bevel, shadowColor, gfx);
+		DrawBevelLeft(pos, height, bevel, Colors::White, gfx);
+	}
+	static void DrawBeveledSquareDown(Vei2 pos, int width, int height, int bevel, Graphics& gfx) {
+		gfx.DrawRect(RectI(pos, width, height), baseColor);
+		DrawBevelTop(pos, width, bevel, shadowColor, gfx);
+		DrawBevelRight(pos + Vei2(width, 0), height, bevel, Colors::White, gfx);
+		DrawBevelBottom(pos + Vei2(0, height), width, bevel, Colors::White, gfx);
+		DrawBevelLeft(pos, height, bevel, shadowColor, gfx);
+	}
+	// code for border drawing
+private:
+	static void DrawBevelTop(Vei2 pos, int width, int depth, Color color, Graphics& gfx) {
+		if (width <= 0 || depth <=0) { return; }
+		for (int i = 0; i < width; i++) {
+			gfx.PutPixel(pos.x + i, pos.y, color);
+		}
+		pos += Vei2(1, 1);
+		DrawBevelTop(pos, width - 2, depth - 1, color, gfx);
+	}
+	static void DrawBevelRight(Vei2 pos, int width, int depth, Color color, Graphics& gfx) {
+		if (width <= 0 || depth <= 0) { return; }
+		for (int i = 0; i < width; i++) {
+			gfx.PutPixel(pos.x, pos.y + i, color);
+		}
+		pos += Vei2(-1, 1);
+		DrawBevelRight(pos, width - 2, depth - 1, color, gfx);
+	}
+	static void DrawBevelBottom(Vei2 pos, int width, int depth, Color color, Graphics& gfx) {
+		if (width <= 0 || depth <= 0) { return; }
+		for (int i = 0; i < width; i++) {
+			gfx.PutPixel(pos.x + i, pos.y, color);
+		}
+		pos += Vei2(1, -1);
+		DrawBevelBottom(pos, width - 2, depth - 1, color, gfx);
+	}
+	static void DrawBevelLeft(Vei2 pos, int width, int depth, Color color, Graphics& gfx) {
+		if (width <= 0 || depth <= 0) { return; }
+		for (int i = 0; i < width; i++) {
+			gfx.PutPixel(pos.x, pos.y + i, color);
+		}
+		pos += Vei2(1, 1);
+		DrawBevelLeft(pos, width - 2, depth - 1, color, gfx);
+	}
 };
