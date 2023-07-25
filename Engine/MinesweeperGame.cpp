@@ -27,4 +27,9 @@ void MinesweeperGame::Draw(Graphics& gfx) const {
 
 	minefield.Draw(gfx);
 
+	RectI frameTop = gameRect;
+	frameTop.bottom = fieldRect.top;
+	frameTop = frameTop.GetExpanded(bevelDepth - smallBorderSize);
+	SpriteCodex::DrawBeveledSquareDown(frameTop, bevelDepth, gfx);
+
 }

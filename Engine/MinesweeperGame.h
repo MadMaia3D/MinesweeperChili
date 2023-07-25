@@ -11,7 +11,7 @@ private:
 	Vei2 position = Vei2(10, 10);
 	Minefield minefield;
 	int nFieldMines;
-	static constexpr int topBorderSize = 100;
-	static constexpr int smallBorderSize = 20;
+	static constexpr int topBorderSize = 90;
+	static constexpr int smallBorderSize = 18;
 	RectI gameRect;
 };
