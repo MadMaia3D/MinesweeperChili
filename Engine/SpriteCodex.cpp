@@ -3858,3 +3858,58 @@ void SpriteCodex::DrawTileBombRed(const Vei2& pos, Graphics& gfx)
 	gfx.PutPixel(x + 23, y + 0, 128, 128, 128);
 	gfx.PutPixel(x + 23, y + 1, 128, 128, 128);
 }
+
+
+// code for beveled rectangle drawing
+
+void SpriteCodex::DrawBeveledSquareUp(Vei2 pos, int width, int height, int bevel, Graphics & gfx) {
+	gfx.DrawRect(RectI(pos, width, height), baseColor);
+	DrawBevelTop(pos, width, bevel, Colors::White, gfx);
+	DrawBevelRight(pos + Vei2(width, 0), height, bevel, shadowColor, gfx);
+	DrawBevelBottom(pos + Vei2(0, height), width, bevel, shadowColor, gfx);
+	DrawBevelLeft(pos, height, bevel, Colors::White, gfx);
+}
+
+void SpriteCodex::DrawBeveledSquareDown(Vei2 pos, int width, int height, int bevel, Graphics & gfx) {
+	gfx.DrawRect(RectI(pos, width, height), baseColor);
+	DrawBevelTop(pos, width, bevel, shadowColor, gfx);
+	DrawBevelRight(pos + Vei2(width, 0), height, bevel, Colors::White, gfx);
+	DrawBevelBottom(pos + Vei2(0, height), width, bevel, Colors::White, gfx);
+	DrawBevelLeft(pos, height, bevel, shadowColor, gfx);
+}
+
+void SpriteCodex::DrawBevelTop(Vei2 pos, int width, int depth, Color color, Graphics & gfx) {
+	if (width <= 0 || depth <= 0) { return; }
+	for (int i = 0; i < width; i++) {
+		gfx.PutPixel(pos.x + i, pos.y, color);
+	}
+	pos += Vei2(1, 1);
+	DrawBevelTop(pos, width - 2, depth - 1, color, gfx);
+}
+
+void SpriteCodex::DrawBevelRight(Vei2 pos, int width, int depth, Color color, Graphics & gfx) {
+	if (width <= 0 || depth <= 0) { return; }
+	for (int i = 0; i < width; i++) {
+		gfx.PutPixel(pos.x, pos.y + i, color);
+	}
+	pos += Vei2(-1, 1);
+	DrawBevelRight(pos, width - 2, depth - 1, color, gfx);
+}
+
+void SpriteCodex::DrawBevelBottom(Vei2 pos, int width, int depth, Color color, Graphics & gfx) {
+	if (width <= 0 || depth <= 0) { return; }
+	for (int i = 0; i < width; i++) {
+		gfx.PutPixel(pos.x + i, pos.y, color);
+	}
+	pos += Vei2(1, -1);
+	DrawBevelBottom(pos, width - 2, depth - 1, color, gfx);
+}
+
+void SpriteCodex::DrawBevelLeft(Vei2 pos, int width, int depth, Color color, Graphics & gfx) {
+	if (width <= 0 || depth <= 0) { return; }
+	for (int i = 0; i < width; i++) {
+		gfx.PutPixel(pos.x, pos.y + i, color);
+	}
+	pos += Vei2(1, 1);
+	DrawBevelLeft(pos, width - 2, depth - 1, color, gfx);
+}
