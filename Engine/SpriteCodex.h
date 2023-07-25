@@ -30,7 +30,9 @@ public:
 	static void DrawTileBombRed( const Vei2& pos,Graphics& gfx );
 	// code for beveled rectangle drawing
 	static void DrawBeveledSquareUp(Vei2 pos, int width, int height, int bevel, Graphics& gfx);
+	static void DrawBeveledSquareUp(RectI rect, int bevel, Graphics& gfx);
 	static void DrawBeveledSquareDown(Vei2 pos, int width, int height, int bevel, Graphics& gfx);
+	static void DrawBeveledSquareDown(RectI rect, int bevel, Graphics& gfx);
 	// code for border drawing
 private:
 	static void DrawBevelTop(Vei2 pos, int width, int depth, Color color, Graphics& gfx);

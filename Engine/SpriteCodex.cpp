@@ -3870,12 +3870,26 @@ void SpriteCodex::DrawBeveledSquareUp(Vei2 pos, int width, int height, int bevel
 	DrawBevelLeft(pos, height, bevel, Colors::White, gfx);
 }
 
+void SpriteCodex::DrawBeveledSquareUp(RectI rect, int bevel, Graphics & gfx) {
+	const Vei2 pos(rect.left, rect.top);
+	const int width = rect.right - rect.left;
+	const int height = rect.bottom - rect.top;
+	DrawBeveledSquareUp(pos, width, height, bevel, gfx);
+}
+
 void SpriteCodex::DrawBeveledSquareDown(Vei2 pos, int width, int height, int bevel, Graphics & gfx) {
 	gfx.DrawRect(RectI(pos, width, height), baseColor);
 	DrawBevelTop(pos, width, bevel, shadowColor, gfx);
 	DrawBevelRight(pos + Vei2(width, 0), height, bevel, Colors::White, gfx);
 	DrawBevelBottom(pos + Vei2(0, height), width, bevel, Colors::White, gfx);
 	DrawBevelLeft(pos, height, bevel, shadowColor, gfx);
+}
+
+void SpriteCodex::DrawBeveledSquareDown(RectI rect, int bevel, Graphics & gfx) {
+	const Vei2 pos(rect.left, rect.top);
+	const int width = rect.right - rect.left;
+	const int height = rect.bottom - rect.top;
+	DrawBeveledSquareDown(pos, width, height, bevel, gfx);
 }
 
 void SpriteCodex::DrawBevelTop(Vei2 pos, int width, int depth, Color color, Graphics & gfx) {
