@@ -13,5 +13,9 @@ private:
 	int nFieldMines;
 	static constexpr int topBorderSize = 90;
 	static constexpr int smallBorderSize = 18;
-	RectI gameRect;
+	static constexpr int bevelDepth = 4;
+	RectI frameRect;
+	RectI fieldRect;
+	RectI frameTop;
+	RectI faceRect;
 };
