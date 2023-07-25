@@ -25,7 +25,7 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	minefield(30)
+	minesweeperGame(90)
 {
 }
 
@@ -42,14 +42,17 @@ void Game::UpdateModel()
 	while (!wnd.mouse.IsEmpty()) {
 		const Mouse::Event mouseEvent = wnd.mouse.Read();
 		if (mouseEvent.GetType() == Mouse::Event::Type::LPress) {
-			minefield.OnRevealClick(mouseEvent.GetPosVei2());
+			//minefield.OnRevealClick(mouseEvent.GetPosVei2());
+			//minefield.OnRevealClick(mouseEvent.GetPosVei2());
+			minesweeperGame.InputLeftClick(mouseEvent.GetPosVei2());
 		} else if (mouseEvent.GetType() == Mouse::Event::Type::RPress) {
-			minefield.OnFlagClick(mouseEvent.GetPosVei2());
+			//minefield.OnFlagClick(mouseEvent.GetPosVei2());
+			minesweeperGame.InputRightClick(mouseEvent.GetPosVei2());
 		}
 	}
 }
 
 void Game::ComposeFrame()
 {
-	minefield.Draw(gfx);
+	minesweeperGame.Draw(gfx);
 }

@@ -17,7 +17,7 @@ public:
 	};
 	class Tile {
 	public:
-		enum class Status : unsigned char{
+		enum class TileState : unsigned char{
 			Hidden,
 			Flagged,
 			Revealed
@@ -36,14 +36,15 @@ public:
 		void DrawOnGameOver(const Vei2& pos, Graphics& gfx) const;
 	private:
 		bool hasBomb = false;
-		Status status = Status::Hidden;
+		TileState status = TileState::Hidden;
 		int nNeighborMines = -1;
 	};
 public:
-	Minefield(int nMemes);
+	Minefield( Vei2 position, int nMines);
 	void OnRevealClick(const Vei2& mousePosition);
 	void OnFlagClick(const Vei2& mousePosition);
 	void Draw(Graphics& gfx) const;
+	RectI GetFieldRect() const;
 private:
 	void RevealMine(const Vei2& gridPosition);
 	void SpawnMines(int nMines);
@@ -57,14 +58,11 @@ private:
 	Vei2 ScreenSpaceToGridSpace(const Vei2& screenPosition) const;
 	const Tile& GetTileAtPosition(const Vei2 & position) const;
 	Tile& GetTileAtPosition(const Vei2 & position);
-	RectI GetFieldRect() const;
 private:
 	GameState gameState = GameState::NotStarted;
-	static constexpr int nColumns = 16;
-	static constexpr int nRows = 12;
-	static constexpr int fieldPositionX = (Graphics::ScreenWidth) / 2 - (SpriteCodex::tileSize * nColumns) / 2;
-	static constexpr int fieldPositionY = (Graphics::ScreenHeight) / 2 - (SpriteCodex::tileSize * nRows) / 2;
-	const Vei2 fieldPosition = Vei2(fieldPositionX, fieldPositionY);
+	static constexpr int nColumns = 30;
+	static constexpr int nRows = 16;
+	const Vei2 fieldPosition;
 	Tile tiles[nColumns * nRows];
 	Vei2 hintPosition = Vei2(-1, -1);
 };

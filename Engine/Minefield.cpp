@@ -4,25 +4,25 @@
 #include <assert.h>
 
 void Minefield::Tile::Reveal() {
-	assert(status != Status::Revealed);
-	status = Status::Revealed;
+	assert(status != TileState::Revealed);
+	status = TileState::Revealed;
 }
 
 bool Minefield::Tile::IsRevealed() const {
-	return status == Status::Revealed;
+	return status == TileState::Revealed;
 }
 
 bool Minefield::Tile::IsFlagged() const {
-	return status == Status::Flagged;
+	return status == TileState::Flagged;
 }
 
 void Minefield::Tile::SetFlag(bool value) {
-	assert(status != Status::Revealed);
-	if (status == Status::Flagged) {
-		status = Status::Hidden;
+	assert(status != TileState::Revealed);
+	if (status == TileState::Flagged) {
+		status = TileState::Hidden;
 	}
 	else {
-		status = Status::Flagged;
+		status = TileState::Flagged;
 	}
 }
 
@@ -33,14 +33,14 @@ bool Minefield::Tile::HasBomb() const {
 void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const {
 	assert(nNeighborMines >= 0 && nNeighborMines < 9);
 	switch (status) {
-	case Status::Hidden:
+	case TileState::Hidden:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		break;
-	case Status::Flagged:
+	case TileState::Flagged:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		SpriteCodex::DrawTileFlag(pos, gfx);
 		break;
-	case Status::Revealed:
+	case TileState::Revealed:
 		if (!hasBomb) {
 			SpriteCodex::DrawTileNumber(pos, nNeighborMines, gfx);
 		}
@@ -54,13 +54,13 @@ void Minefield::Tile::Draw(const Vei2 & pos, Graphics & gfx) const {
 void Minefield::Tile::DrawOnGameOver(const Vei2 & pos, Graphics & gfx) const {
 	assert(nNeighborMines >= 0 && nNeighborMines < 9);
 	switch (status) {
-	case Status::Hidden:
+	case TileState::Hidden:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		if (hasBomb) {
 			SpriteCodex::DrawTileBomb(pos, gfx);
 		}
 		break;
-	case Status::Flagged:
+	case TileState::Flagged:
 		SpriteCodex::DrawTileButton(pos, gfx);
 		if (hasBomb) {
 			SpriteCodex::DrawTileFlag(pos, gfx);
@@ -69,7 +69,7 @@ void Minefield::Tile::DrawOnGameOver(const Vei2 & pos, Graphics & gfx) const {
 			SpriteCodex::DrawTileCrossRed(pos, gfx);
 		}
 		break;
-	case Status::Revealed:
+	case TileState::Revealed:
 		if (!hasBomb) {
 			SpriteCodex::DrawTileNumber(pos, nNeighborMines, gfx);
 		}
@@ -98,8 +98,11 @@ bool Minefield::Tile::HasNeighborMines() const {
 	return nNeighborMines > 0;
 }
 
-Minefield::Minefield(int nMemes) {
-	SpawnMines(nMemes);
+Minefield::Minefield(Vei2 position, int nMines)
+	:
+	fieldPosition(position)
+{
+	SpawnMines(nMines);
 	SetNeighborMinesNumber();
 	hintPosition = GenerateHintPosition();
 }
