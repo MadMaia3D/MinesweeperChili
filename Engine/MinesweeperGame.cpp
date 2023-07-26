@@ -42,5 +42,17 @@ void MinesweeperGame::Draw(Graphics& gfx) const {
 
 	SpriteCodex::DrawBeveledSquareUp(faceRect, bevelDepth, gfx);
 	const Vei2 facePos(faceRect.left, faceRect.top);
-	SpriteCodex::DrawFaceUnpressed(facePos, gfx);
+	switch (minefield.GetGameState()) {
+
+	case Minefield::GameState::NotStarted:
+	case Minefield::GameState::Playing:
+		SpriteCodex::DrawFaceUnpressed(facePos, gfx);
+		break;
+	case Minefield::GameState::Win:
+		SpriteCodex::DrawFaceWin(facePos, gfx);
+		break;
+	case Minefield::GameState::GameOver:
+		SpriteCodex::DrawFaceLose(facePos, gfx);
+		break;
+	}
 }

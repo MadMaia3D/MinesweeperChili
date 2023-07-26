@@ -13,7 +13,8 @@ public:
 	enum class GameState : unsigned char {
 		NotStarted,
 		Playing,
-		GameOver
+		GameOver,
+		Win
 	};
 	class Tile {
 	public:
@@ -45,6 +46,7 @@ public:
 	void OnFlagClick(const Vei2& mousePosition);
 	void Draw(Graphics& gfx) const;
 	RectI GetFieldRect() const;
+	const GameState GetGameState() const;
 private:
 	void RevealMine(const Vei2& gridPosition);
 	void SpawnMines(int nMines);
@@ -58,6 +60,7 @@ private:
 	Vei2 ScreenSpaceToGridSpace(const Vei2& screenPosition) const;
 	const Tile& GetTileAtPosition(const Vei2 & position) const;
 	Tile& GetTileAtPosition(const Vei2 & position);
+	bool IsGameWon() const;
 private:
 	GameState gameState = GameState::NotStarted;
 	static constexpr int nColumns = 30;

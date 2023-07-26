@@ -220,10 +220,7 @@ void Minefield::Draw(Graphics & gfx) const {
 
 void Minefield::RevealMine(const Vei2 & gridPosition) {
 	Tile& tile = GetTileAtPosition(gridPosition);
-	if (tile.IsFlagged()) {
-		return;
-	}
-
+	if (tile.IsFlagged()) {	return;	}
 
 	if (!tile.IsRevealed()) {
 		tile.Reveal();
@@ -241,6 +238,10 @@ void Minefield::RevealMine(const Vei2 & gridPosition) {
 	}
 	else if (!tile.HasNeighborMines()) {
 		RevealNeighbors(gridPosition);
+	}
+
+	if (IsGameWon()) {
+		gameState = GameState::Win;
 	}
 }
 
@@ -317,6 +318,22 @@ Minefield::Tile& Minefield::GetTileAtPosition(const Vei2& position) {
 	assert(position.x >= 0 && position.x <= nColumns);
 	assert(position.y >= 0 && position.y <= nRows);
 	return tiles[position.y * nColumns + position.x];
+}
+
+bool Minefield::IsGameWon() const {
+	for (const Tile& tile : tiles) {
+		if (tile.IsRevealed() && tile.HasBomb()) {
+			return false;
+		}
+		if (!tile.IsRevealed() && !tile.HasBomb()) {
+			return false;
+		}
+	}
+	return true;
+}
+
+const Minefield::GameState Minefield::GetGameState() const {
+	return gameState;
 }
 
 RectI Minefield::GetFieldRect() const {
